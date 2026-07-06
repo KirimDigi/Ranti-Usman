@@ -5445,18 +5445,18 @@
           if (!commentContainer) return;
           
           if (!scriptUrl || scriptUrl.trim() === "") {
-            commentContainer.innerHTML = '<li style="color: #ffffff; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Silakan isi URL Google Apps Script Web App Anda pada variabel <code>scriptUrl</code> di bagian akhir file <code>index.html</code>.</li>';
+            commentContainer.innerHTML = '<li style="color: #000000; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Silakan isi URL Google Apps Script Web App Anda pada variabel <code>scriptUrl</code> di bagian akhir file <code>index.html</code>.</li>';
             return;
           }
 
-          commentContainer.innerHTML = '<li style="color: #ffffff; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Memuat ucapan...</li>';
+          commentContainer.innerHTML = '<li style="color: #000000; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Memuat ucapan...</li>';
 
           fetch(scriptUrl)
             .then(response => response.json())
             .then(data => {
               commentContainer.innerHTML = "";
               if (data.length === 0) {
-                commentContainer.innerHTML = '<li style="color: #ffffff; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Belum ada ucapan. Jadilah yang pertama memberikan ucapan!</li>';
+                commentContainer.innerHTML = '<li style="color: #000000; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Belum ada ucapan. Jadilah yang pertama memberikan ucapan!</li>';
                 return;
               }
 
@@ -5479,7 +5479,7 @@
                 li.style.borderBottom = "1px solid rgba(255, 255, 255, 0.1)";
                 li.style.padding = "15px 0";
                 li.style.listStyle = "none";
-                li.style.color = "#ffffff";
+                li.style.color = "#000000";
                 li.style.fontFamily = '"Outfit", "Inter", sans-serif';
 
                 li.innerHTML = `
@@ -5489,13 +5489,13 @@
                     </div>
                   </div>
                   <div class="cui-comment-content" style="overflow: hidden;">
-                    <div style="font-weight: bold; font-size: 14px; margin-bottom: 2px;">
+                    <div style="font-weight: bold; font-size: 14px; margin-bottom: 2px; color: #000000;">
                       ${item.name} ${attendanceBadge}
                     </div>
-                    <div style="font-size: 11px; opacity: 0.6; margin-bottom: 8px;">
+                    <div style="font-size: 11px; color: #666666; margin-bottom: 8px;">
                       ${dateStr} ${item.guests && item.guests !== "1" ? ' | ' + item.guests + ' Orang' : ''}
                     </div>
-                    <div style="font-size: 13px; line-height: 1.5; color: #ffffff; white-space: pre-line;">
+                    <div style="font-size: 13px; line-height: 1.5; color: #333333; white-space: pre-line;">
                       ${item.wish}
                     </div>
                   </div>
@@ -5506,7 +5506,7 @@
             })
             .catch(err => {
               console.error(err);
-              commentContainer.innerHTML = '<li style="color: #ffffff; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Gagal memuat ucapan. Silakan coba lagi nanti.</li>';
+              commentContainer.innerHTML = '<li style="color: #000000; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Gagal memuat ucapan. Silakan coba lagi nanti.</li>';
             });
         }
 
