@@ -1060,17 +1060,49 @@
     </style>
     <style>
       @media (max-width: 767px) {
+        /* Parent welcome container: use flex-column with justify-content: space-between */
         .elementor-element.elementor-element-ef04b45 {
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: space-between !important;
+          align-items: center !important;
+          height: 100vh !important;
+          min-height: 100vh !important;
+          padding-top: 4vh !important;
+          padding-bottom: 4vh !important;
+          box-sizing: border-box !important;
           background-image: linear-gradient(180deg, rgba(143, 127, 115, 0.3) 0%, rgba(143, 127, 115, 0.9) 100%), url("wp-content/uploads/jet-form-builder/a70aa35fe993015f691182588444e6ab/2024/10/Couple-Animasi.webp") !important;
           background-size: cover !important;
           background-position: center center !important;
           background-repeat: no-repeat !important;
         }
-        /* Disable separate inner gradients to avoid double overlaying */
-        .elementor-element.elementor-element-27c2857,
-        .elementor-element.elementor-element-230bca5 {
+        
+        /* Top block (The Wedding Of Ranti & Usman) */
+        .elementor-element.elementor-element-27c2857 {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          margin-top: 0 !important;
           background-image: none !important;
           background-color: transparent !important;
+          width: 100% !important;
+        }
+        
+        /* Bottom block (Kepada Yth, Nama Tamu, Buka Undangan) */
+        .elementor-element.elementor-element-230bca5 {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          margin-bottom: 0 !important;
+          background-image: none !important;
+          background-color: transparent !important;
+          width: 100% !important;
+        }
+        
+        /* Remove fixed height spacers on mobile to let flexbox distribute space dynamically */
+        .elementor-element.elementor-element-8027643,
+        .elementor-element.elementor-element-3d3bc4f {
+          display: none !important;
         }
       }
     </style>
