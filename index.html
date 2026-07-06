@@ -5416,7 +5416,6 @@
       document.addEventListener("DOMContentLoaded", function() {
         const form = document.getElementById("commentform-67828");
         const commentContainer = document.getElementById("saic-container-comment-67828");
-        const toggleBtn = document.getElementById("btn-toggle-comments");
         
         // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE:
         const scriptUrl = "https://script.google.com/macros/s/AKfycby-DfvzXK8wE7b8PxMtqSOhDfxBslhy5opUqyY_FFiJb3xd-5asKdHTx-nI_Mdrpd_moQ/exec"; 
@@ -5424,20 +5423,6 @@
         // Hide comment container by default
         if (commentContainer) {
           commentContainer.style.display = "none";
-        }
-
-        // Handle Show/Hide button click
-        if (toggleBtn) {
-          toggleBtn.addEventListener("click", function() {
-            if (commentContainer.style.display === "none") {
-              commentContainer.style.display = "block";
-              toggleBtn.textContent = "Sembunyikan Ucapan";
-              loadComments();
-            } else {
-              commentContainer.style.display = "none";
-              toggleBtn.textContent = "Tampilkan Ucapan";
-            }
-          });
         }
 
         // Load comments from Google Sheet
@@ -5512,9 +5497,24 @@
 
         // Handle Form Submit
         if (form) {
-          // Unbind any other submit listeners
+          // Unbind any other submit listeners by cloning the form
           const newForm = form.cloneNode(true);
           form.parentNode.replaceChild(newForm, form);
+
+          // Get the new toggle button reference after form cloning
+          const toggleBtn = document.getElementById("btn-toggle-comments");
+          if (toggleBtn) {
+            toggleBtn.addEventListener("click", function() {
+              if (commentContainer.style.display === "none") {
+                commentContainer.style.display = "block";
+                toggleBtn.textContent = "Sembunyikan Ucapan";
+                loadComments();
+              } else {
+                commentContainer.style.display = "none";
+                toggleBtn.textContent = "Tampilkan Ucapan";
+              }
+            });
+          }
 
           newForm.addEventListener("submit", function(e) {
             e.preventDefault();
