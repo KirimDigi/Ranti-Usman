@@ -3561,6 +3561,22 @@
                                     />
                                   </p>
                                 </div>
+                                <div class="saic-wrap-submit saic-clearfix" style="margin-top: 10px;">
+                                  <button type="button" id="btn-toggle-comments" style="
+                                    background-color: #8F7F73;
+                                    color: #ffffff;
+                                    border: none;
+                                    padding: 10px 20px;
+                                    font-family: 'Outfit', 'Inter', sans-serif;
+                                    font-size: 14px;
+                                    font-weight: 500;
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                    transition: background-color 0.2s;
+                                    width: 100%;
+                                    box-sizing: border-box;
+                                  ">Tampilkan Ucapan</button>
+                                </div>
                               </form>
                             </div>
                           </div>
@@ -3573,6 +3589,7 @@
                           class="saic-container-comments saic-order-DESC"
                           data-order="DESC"
                           id="saic-container-comment-67828"
+                          style="display: none;"
                         ></ul>
                         <div class="saic-holder-67828 saic-holder"></div>
                       </div>
@@ -5395,6 +5412,191 @@
       integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ=="
       src="beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447-1"
     ></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById("commentform-67828");
+        const commentContainer = document.getElementById("saic-container-comment-67828");
+        const toggleBtn = document.getElementById("btn-toggle-comments");
+        
+        // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE:
+        const scriptUrl = ""; 
+
+        // Hide comment container by default
+        if (commentContainer) {
+          commentContainer.style.display = "none";
+        }
+
+        // Handle Show/Hide button click
+        if (toggleBtn) {
+          toggleBtn.addEventListener("click", function() {
+            if (commentContainer.style.display === "none") {
+              commentContainer.style.display = "block";
+              toggleBtn.textContent = "Sembunyikan Ucapan";
+              loadComments();
+            } else {
+              commentContainer.style.display = "none";
+              toggleBtn.textContent = "Tampilkan Ucapan";
+            }
+          });
+        }
+
+        // Load comments from Google Sheet
+        function loadComments() {
+          if (!commentContainer) return;
+          
+          if (!scriptUrl || scriptUrl.trim() === "") {
+            commentContainer.innerHTML = '<li style="color: #ffffff; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Silakan isi URL Google Apps Script Web App Anda pada variabel <code>scriptUrl</code> di bagian akhir file <code>index.html</code>.</li>';
+            return;
+          }
+
+          commentContainer.innerHTML = '<li style="color: #ffffff; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Memuat ucapan...</li>';
+
+          fetch(scriptUrl)
+            .then(response => response.json())
+            .then(data => {
+              commentContainer.innerHTML = "";
+              if (data.length === 0) {
+                commentContainer.innerHTML = '<li style="color: #ffffff; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Belum ada ucapan. Jadilah yang pertama memberikan ucapan!</li>';
+                return;
+              }
+
+              // Display comments in descending order (newest first)
+              data.reverse().forEach(item => {
+                const dateStr = item.timestamp ? new Date(item.timestamp).toLocaleString("id-ID", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit"
+                }) : "";
+
+                const attendanceBadge = item.attendance === "present" 
+                  ? '<span class="cui_comment_count_card cui_card-hadir" style="background-color: #3D9A62; color: #ffffff; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 8px; display: inline-block;">Hadir</span>'
+                  : '<span class="cui_comment_count_card cui_card-tidak_hadir" style="background-color: #d90a11; color: #ffffff; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 8px; display: inline-block;">Tidak Hadir</span>';
+
+                const li = document.createElement("li");
+                li.className = "cui-item-comment";
+                li.style.borderBottom = "1px solid rgba(255, 255, 255, 0.1)";
+                li.style.padding = "15px 0";
+                li.style.listStyle = "none";
+                li.style.color = "#ffffff";
+                li.style.fontFamily = '"Outfit", "Inter", sans-serif';
+
+                li.innerHTML = `
+                  <div class="cui-comment-avatar" style="float: left; margin-right: 12px;">
+                    <div style="width: 35px; height: 35px; border-radius: 50%; background-color: #8F7F73; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
+                      ${item.name ? item.name.charAt(0).toUpperCase() : "?"}
+                    </div>
+                  </div>
+                  <div class="cui-comment-content" style="overflow: hidden;">
+                    <div style="font-weight: bold; font-size: 14px; margin-bottom: 2px;">
+                      ${item.name} ${attendanceBadge}
+                    </div>
+                    <div style="font-size: 11px; opacity: 0.6; margin-bottom: 8px;">
+                      ${dateStr} ${item.guests && item.guests !== "1" ? ' | ' + item.guests + ' Orang' : ''}
+                    </div>
+                    <div style="font-size: 13px; line-height: 1.5; color: #ffffff; white-space: pre-line;">
+                      ${item.wish}
+                    </div>
+                  </div>
+                  <div style="clear: both;"></div>
+                `;
+                commentContainer.appendChild(li);
+              });
+            })
+            .catch(err => {
+              console.error(err);
+              commentContainer.innerHTML = '<li style="color: #ffffff; text-align: center; list-style: none; padding: 15px; font-family: \'Outfit\', \'Inter\', sans-serif;">Gagal memuat ucapan. Silakan coba lagi nanti.</li>';
+            });
+        }
+
+        // Handle Form Submit
+        if (form) {
+          // Unbind any other submit listeners
+          const newForm = form.cloneNode(true);
+          form.parentNode.replaceChild(newForm, form);
+
+          newForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const nameInput = document.getElementById("author");
+            const attendanceInput = document.getElementById("attendance");
+            const guestInput = document.getElementById("guest");
+            const commentInput = document.getElementById("saic-textarea-67828");
+
+            if (!nameInput.value.trim()) {
+              alert("Silakan masukkan nama Anda.");
+              return;
+            }
+            if (!attendanceInput.value) {
+              alert("Silakan pilih konfirmasi kehadiran.");
+              return;
+            }
+            if (!commentInput.value.trim()) {
+              alert("Silakan tulis ucapan Anda.");
+              return;
+            }
+
+            if (!scriptUrl || scriptUrl.trim() === "") {
+              alert("Google Apps Script Web App URL belum diisi. Silakan isi variabel scriptUrl di bagian bawah file index.html terlebih dahulu.");
+              return;
+            }
+
+            const submitBtn = document.getElementById("submit-67828");
+            let originalBtnVal = "Kirim";
+            if (submitBtn) {
+              originalBtnVal = submitBtn.value;
+              submitBtn.disabled = true;
+              submitBtn.value = "Mengirim...";
+            }
+
+            const name = encodeURIComponent(nameInput.value.trim());
+            const attendance = encodeURIComponent(attendanceInput.value);
+            const guests = encodeURIComponent(guestInput.value || "1");
+            const wish = encodeURIComponent(commentInput.value.trim());
+
+            const url = `${scriptUrl}?action=add&name=${name}&attendance=${attendance}&guests=${guests}&wish=${wish}`;
+
+            fetch(url)
+              .then(response => response.json())
+              .then(result => {
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.value = originalBtnVal;
+                }
+
+                if (result.status === "success") {
+                  nameInput.value = "";
+                  attendanceInput.value = "";
+                  guestInput.value = "";
+                  commentInput.value = "";
+
+                  alert("Ucapan Anda berhasil dikirim!");
+                  
+                  // Open comments section and load
+                  if (commentContainer) {
+                    commentContainer.style.display = "block";
+                    if (toggleBtn) {
+                      toggleBtn.textContent = "Sembunyikan Ucapan";
+                    }
+                    loadComments();
+                  }
+                } else {
+                  alert("Gagal mengirim ucapan: " + (result.message || "Unknown error"));
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.value = originalBtnVal;
+                }
+                alert("Terjadi kesalahan koneksi saat mengirim ucapan. Silakan coba lagi.");
+              });
+          });
+        }
+      });
+    </script>
   </body>
 </html>
 <!--
